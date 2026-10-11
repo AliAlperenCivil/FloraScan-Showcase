@@ -4,19 +4,16 @@
 
 # FloraScan
 
-### Yapay Zeka Destekli Hassas Tarım ve Robotik Hedefleme Sistemi
+### Bilgisayarlı Görü Tabanlı Hassas Tarım ve Robotik Hedefleme Sistemi
 
-Ekin ve yabani otları gerçek zamanlı tespit eden, pülverizatör ve otonom ilaçlama nozulları için milimetrik hedef koordinatı üreten uçtan uca tarımsal yapay zeka ekosistemi.
+Ekin ve yabani otları morfolojik özniteliklerle anlık olarak tespit eden, pülverizatör ve otonom ilaçlama nozulları için milimetrik hedef koordinatı üreten tarımsal bilgisayarlı görü sistemi.
 
 <p align="center">
   <img src="assets/badge_tubitak.svg" alt="TÜBİTAK 2209-A" />
-  <img src="https://img.shields.io/badge/Akademik-Bitirme_Tezi-1f4287?style=flat-square" alt="Bitirme Tezi" />
-  <img src="https://img.shields.io/badge/Model-97%25_Dogruluk-2e7d32?style=flat-square" alt="Model Doğruluğu" />
-  <img src="https://img.shields.io/badge/Cross_Validation-96.8%25-brightgreen?style=flat-square" alt="Cross Validation" />
   <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter" />
   <img src="https://img.shields.io/badge/FastAPI-Python-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/OpenCV-Computer_Vision-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV" />
+  <img src="assets/badge_opencv.svg" alt="OpenCV Computer Vision" />
 </p>
 
 </div>
