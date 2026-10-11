@@ -9,23 +9,19 @@
 Ekin ve yabani otları gerçek zamanlı tespit eden, pülverizatör ve otonom ilaçlama nozulları için milimetrik hedef koordinatı üreten uçtan uca tarımsal yapay zeka ekosistemi.
 
 <p align="center">
-  <img src="https://img.shields.io/static/v1?label=TUBITAK&message=2209-A&color=004B87&style=flat-square" alt="TUBITAK 2209-A" />
-  <img src="https://img.shields.io/static/v1?label=Tez&message=Bitirme%20Projesi&color=1f4287&style=flat-square" alt="Bitirme Tezi" />
-  <img src="https://img.shields.io/static/v1?label=Model&message=97%25%20Dogruluk&color=2e7d32&style=flat-square" alt="Model Dogrulugu" />
-  <img src="https://img.shields.io/static/v1?label=Cross%20Validation&message=96.8%25&color=brightgreen&style=flat-square" alt="Cross Validation" />
+  <img src="assets/badge_tubitak.svg" alt="TÜBİTAK 2209-A" />
+  <img src="https://img.shields.io/badge/Akademik-Bitirme_Tezi-1f4287?style=flat-square" alt="Bitirme Tezi" />
+  <img src="https://img.shields.io/badge/Model-97%25_Dogruluk-2e7d32?style=flat-square" alt="Model Doğruluğu" />
+  <img src="https://img.shields.io/badge/Cross_Validation-96.8%25-brightgreen?style=flat-square" alt="Cross Validation" />
   <img src="https://img.shields.io/badge/Flutter-3.x-02569B?style=flat-square&logo=flutter&logoColor=white" alt="Flutter" />
   <img src="https://img.shields.io/badge/FastAPI-Python-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
-  <img src="https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV" />
+  <img src="https://img.shields.io/badge/OpenCV-Computer_Vision-5C3EE8?style=flat-square&logo=opencv&logoColor=white" alt="OpenCV" />
 </p>
 
 </div>
 
 ---
-
-<div align="center">
-  <img src="assets/tubitak_2209a.png" width="320" alt="TUBITAK 2209-A Destek Programi" />
-</div>
 
 > **Gizlilik ve Fikri Mülkiyet Bildirimi (Intellectual Property Notice):**  
 > Bu proje; **TÜBİTAK 2209-A Üniversite Öğrencileri Araştırma Projeleri Destekleme Programı** ve **Mühendislik Lisans Bitirme Tezi** kapsamında geliştirilmektedir. Akademik yayın, patent ve tez teslim süreçlerinin korunması amacıyla sistemin çekirdek kaynak kodları bu vitrin deposunda açık kaynak olarak sunulmamaktadır. Bu repository; projenin sistem mimarisini, öznitelik mühendisliği yöntemlerini, model başarım metriklerini ve arayüzünü sergileyen resmi vitrin deposudur.
