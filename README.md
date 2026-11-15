@@ -31,7 +31,7 @@ Geleneksel tarımsal mücadelede yabani otlar tüm tarlaya homojen ve aşırı m
 
 FloraScan, mobil kamera aracılığıyla tarladaki bitki örtüsünü anlık olarak analiz eder:
 
-1. **Sınıflandırma:** Bitkinin Kültür Bitkisi (Crop) mi yoksa Yabani Ot (Weed) mu olduğunu %97 doğrulukla sınıflandırır.
+1. **Sınıflandırma:** Bitkinin Kültür Bitkisi (Crop) mi yoksa Yabani Ot (Weed) mu olduğunu %96.91 doğrulukla sınıflandırır.
 2. **Morfolojik Segmentasyon:** Hedef bitki gövdesini çevreleyen dinamik sınırlayıcı kutuyu (Bounding Box) hesaplar.
 3. **Hassas Hedefleme:** Tespit edilen bitki yabani ot ise, bitkinin geometrik ağırlık merkezini çıkararak ilaçlama nozullarının kilitlenebileceği piksel ve normalize koordinatları ($X, Y, nX, nY$) üretir.
 4. **Ekin Koruma Modu:** Tespit edilen bitki bir kültür bitkisi ise, ilaçlama mekanizması bloke edilir (`target_point = null`) ve ekin koruma kalkanı devreye girer.
@@ -57,15 +57,17 @@ Saha koşulları ve doğrudan güneş ışığı altında optimum okunabilirlik 
       </td>
     </tr>
     <tr>
-      <td align="center"><em>Çekim ve galeri seçim arayüzü</em></td>
+      <td align="center"><em>Çekim, galeri seçimi, çift dilli (TR/EN) arayüz ve hesap/geçmiş erişimi</em></td>
       <td align="center"><em>Yeşil sınırlayıcı kutu, kırmızı nişangah ve milimetrik koordinat kartı</em></td>
     </tr>
   </table>
 </div>
 
-* **Görüntü Optimizasyonu:** Çekilen yüksek çözünürlüklü ham fotoğraflar (10+ MB), istemci tarafında $1024 \times 1024$ JPEG %85 formatına sıkıştırılarak hücresel veri tüketimi ve ağ gecikmesi en aza indirilir.
+* **Görüntü Optimizasyonu ve Gizlilik:** Çekilen yüksek çözünürlüklü ham fotoğraflar (10+ MB), istemci tarafında $1024 \times 1024$ JPEG %85 (~300 KB) formatına sıkıştırılır; sunucu tarafında EXIF konum/cihaz metaverileri temizlenerek WebP (~120-150 KB) ve 200x200 küçük resme (`thumb.webp`) dönüştürülür.
 * **Görsel Geri Bildirim:** Analiz edilen yabani ot üzerinde yeşil sınırlayıcı kutu ve kırmızı hedef artı işareti (crosshair) dinamik olarak çizilir.
 * **Telemetri ve Koordinat Kartı:** Piksel ($X: 439\text{ px}, Y: 544\text{ px}$) ve normalize koordinatlar ($0.5716, 0.5313$) ekranda kullanıcıya ve donanım arayüzüne sunulur.
+* **Çift Dilli Arayüz ve Esnek Ekran Uyumu:** Türkçe öncelikli anlık **TR/EN** dil değişimi (`flutter_localizations`), izin reddi/kimlik doğrulama hatalarının yerelleştirilmiş yönetimi ve farklı ekran oranlarına uyumlu taşmasız düzen sunulur.
+* **Kayıt Gerektirmeyen Kullanım ve Çevrimdışı Geçmiş:** İlk açılışta arka planda anonim oturum başlatılır; kullanıcı dilediğinde e-posta ile kalıcı hesaba geçip misafir taramalarını birleştirebilir veya geçmiş taramalarını internet kesintilerinde dahi yerel SQLite önbelleğinden görüntüleyebilir.
 
 ---
 
@@ -96,39 +98,43 @@ flowchart LR
 
 | Algoritma | Parametreler | Test Doğruluğu | Çıkarım Karakteristiği |
 | :--- | :--- | :--- | :--- |
-| **Random Forest (Seçilen)** | `n_estimators=200, max_depth=10` | **%97.00** | **En yüksek genelleme, mikrosaniyeler mertebesinde çıkarım süresi, aşırı öğrenmeye karşı direnç.** |
-| **Gradient Boosting (GBDT)** | `n_estimators=100, lr=0.1` | %95.20 | Yüksek doğruluk; sıralı ağaç yapısı nedeniyle daha uzun çıkarım süresi. |
-| **Destek Vektör Makineleri (SVM)** | `RBF Kernel, C=1.0` | %94.80 | Kararlı karar sınırları; yüksek boyutlu uzayda güvenilir ayrım. |
-| **Lojistik Regresyon** | `max_iter=1000` | %88.40 | Doğrusal sınır; karmaşık yaprak dokusu ve ışık değişimlerinde sınırlı başarım. |
+| **Random Forest (Seçilen)** | `n_estimators=200, max_depth=10` | **%96.91** | **En yüksek genelleme, mikrosaniyeler mertebesinde çıkarım süresi, aşırı öğrenmeye karşı direnç.** |
+| **Gradient Boosting (GBDT)** | `n_estimators=150, lr=0.1, max_depth=3` | %94.98 | Yüksek doğruluk; sıralı ağaç yapısı nedeniyle daha uzun çıkarım süresi. |
+| **Lojistik Regresyon** | `max_iter=1000` | %88.42 | Doğrusal sınır; karmaşık yaprak dokusu ve ışık değişimlerinde sınırlı başarım. |
+| **Destek Vektör Makineleri (SVM)** | `RBF Kernel, C=10, gamma='scale'` | %86.49 | Doğrusal olmayan karar sınırı; ölçeklenmemiş öznitelik uzayında daha düşük ayrım. |
 
-* **5-Katlı Çapraz Doğrulama (5-Fold Cross Validation):** %96.8 kararlı doğruluk.
+* **5-Katlı Çapraz Doğrulama (5-Fold Cross Validation):** %96.64 kararlı doğruluk (OOB tahmini: %97.21, Eğitim seti: %99.81).
 * **Model Dosya Boyutu:** Yalnızca 1.7 MB (`flora_model.joblib`), bulut ve uç cihazlarda anlık bellek yükleme imkanı.
 
 ---
 
 ## Uçtan Uca Sistem Mimarisi
 
-Sistem; mobil istemci, bulut API, görüntü işleme motoru, makine öğrenmesi çıkarım birimi ve ilişkisel veritabanından oluşan dağıtık bir yapı üzerinde çalışır:
+Sistem; mobil istemci, kimlik doğrulama katmanı, bulut API, görüntü işleme motoru, makine öğrenmesi çıkarım birimi, gizli nesne depolama ve ilişkisel veritabanından oluşan dağıtık bir yapı üzerinde çalışır:
 
 ```mermaid
 sequenceDiagram
     autonumber
     actor U as Kullanici / Ciftci
-    participant APP as Flutter Mobil Istemci
+    participant APP as Flutter Mobil Istemci (SQLite)
+    participant AUTH as Supabase Auth (JWT)
     participant API as FastAPI Cloud API (Render EU)
     participant CV as CV Motoru (OpenCV & Skimage)
     participant ML as ML Cikarim (Random Forest)
+    participant ST as Supabase Storage (Private)
     participant DB as Supabase PostgreSQL (RLS)
 
+    APP->>AUTH: Anonim veya Kayitli Oturum (JWT)
     U->>APP: Kamera ile Cek / Galeriden Sec
-    Note over APP: Gorsel Boyutlandirma ve Sikistirma (1024x1024)
-    APP->>API: POST /predict (Multipart/form-data via HTTPS)
+    Note over APP: Gorsel Boyutlandirma ve Sikistirma (1024x1024 JPEG)
+    APP->>API: POST /predict (Multipart + Bearer JWT, 50s Timeout)
+    API->>AUTH: JWT Dogrulama (user_id)
     API->>CV: extract_features_from_array()
     CV-->>API: 9 Boyutlu Oznitelik Vektoru
     API->>ML: predict_plant()
     ML-->>API: Sinif (crop/weed/unknown) ve Guven Skoru
     API->>CV: compute_bounding_box()
-    CV-->>API: Sınır Kutusu Koordinatlari (x, y, w, h)
+    CV-->>API: Sinir Kutusu Koordinatlari (x, y, w, h)
     
     alt Weed (Yabani Ot)
         Note over API: Hedefleme Noktasi Hesaplanir (target_x, target_y, target_nx, target_ny)
@@ -136,8 +142,9 @@ sequenceDiagram
         Note over API: Ekin Koruma Modu (target_point = null)
     end
     
-    API->>DB: save_scan() ile Kalici Veritabani Kaydi
-    API-->>APP: JSON Yaniti
+    API->>ST: EXIF Temizlenmis WebP + 200x200 Thumbnail Yukle
+    API->>DB: save_scan() ile Kullaniciya Ozel Veritabani Kaydi
+    API-->>APP: JSON Yaniti (Sinif, Skor, Kutu, Hedef Noktasi)
     APP->>U: Sinirlayici Kutu, Nisangah ve Hedef Kartini Goster
 ```
 
@@ -147,13 +154,16 @@ sequenceDiagram
 
 | Katman | Teknoloji / Kütüphane | Görev ve Sorumluluk |
 | :--- | :--- | :--- |
-| **Mobil Uygulama** | Flutter 3.x, Dart | Çapraz platform istemci, reaktif kullanıcı arayüzü |
+| **Mobil Uygulama** | Flutter 3.x, Dart | Çapraz platform istemci, responsive arayüz, TR/EN `l10n` desteği |
 | **Durum Yönetimi** | Provider | Durum yönetimi ve asenkron veri akışı |
+| **Yerel Önbellek** | `sqflite`, `cached_network_image` | Çevrimdışı tarama geçmişi ve küçük resim önbellekleme |
 | **Görüntü İşleme (İstemci)** | `flutter_image_compress` | Kamera çekimlerini ağ transferi öncesi optimize etme |
-| **Backend Framework** | FastAPI (Python 3.11+) | Asenkron RESTful API mimarisi ve mikroservis yönetimi |
-| **Bulut Dağıtımı** | Render PaaS (Frankfurt EU) | Konteynerize üretim sunucusu barındırma |
+| **Kimlik Doğrulama** | Supabase Auth (`supabase_flutter`, `PyJWT`) | Anonim misafir oturumu, hesap yükseltme/birleştirme ve JWT doğrulama |
+| **Backend Framework** | FastAPI (Python 3.11+) | Asenkron RESTful API mimarisi, EXIF temizliği, KVKK uyumlu hesap silme |
+| **Bulut Dağıtımı** | Render PaaS (Frankfurt EU) | Konteynerize üretim sunucusu ve 50 sn soğuk başlatma toleransı |
 | **Sağlık İzleme** | UptimeRobot | 5 dakikalık periyotlarla HTTP HEAD denetimi (Soğuk Başlatma Önleme) |
-| **Veritabanı** | Supabase (PostgreSQL 15) | Kalıcı tarama telemetrisi, IPv4 Connection Pooler, RLS güvenliği |
+| **Görsel Depolama** | Supabase Storage (Private Bucket) | WebP tam görsel/thumbnail saklama ve 1 saatlik `signed URL` üretimi |
+| **Veritabanı** | Supabase (PostgreSQL 15) | Kullanıcıya izole tarama telemetrisi, Supavisor IPv4 Pooler, RLS güvenliği |
 | **Bilgisayarlı Görü** | `opencv-python-headless`, `scikit-image` | Renk dönüşümleri, morfolojik filtreleme, GLCM, HOG analizi |
 | **Makine Öğrenmesi** | `scikit-learn`, `joblib`, `numpy` | Random Forest sınıflandırma ve tensör işlemleri |
 
